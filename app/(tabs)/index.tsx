@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList, RefreshControl, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 
 import { useEffect, useReducer, useState } from 'react';
 import ActivitiesButtons, { ActivityButtonType } from '../../components/Activities';
@@ -21,31 +21,41 @@ function reducer(prevState: Activities, action: ActionType): Activities {
 export default function TabOneScreen() {
   const [state, dispatch] = useReducer(reducer, []);
   const [example, setExample] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
+  function fetchActivities() {
     const result = axios.get('https://nursery.up.railway.app/');
 
     result.then((res) => {
       setExample(res.data);
+      setRefreshing(false);
     }
     ).catch((err) => {
       console.log(err);
     });
-  }, [])
+  }
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchActivities();
+  }
+
+  useEffect(() => {
+    fetchActivities();
+  }, []);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Activities</Text>
-      <Text style={styles.title}>{example ? example : '...loading'}</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <ActivitiesButtons activities={initialState} dispatch={dispatch} />
-      <FlatList
-        data={state}
-        renderItem={({ item }) => <Text >{item.name}</Text>}
-        keyExtractor={item => item.id}
-      />
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container} refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+        <Text style={styles.title}>Activities</Text>
+        <Text style={styles.title}>{example ? example : '...loading'}</Text>
+        <View style={styles.separator} lightColor="gray" darkColor="rgba(255,255,255,0.1)" />
+        <ActivitiesButtons activities={initialState} dispatch={dispatch} />
+        {state.map((activity) => <Text key={activity.id}>{activity.name}</Text>)}
+      </ScrollView>
 
-    </View>
+    </SafeAreaView>
   );
 }
 
