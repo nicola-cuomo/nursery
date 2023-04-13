@@ -1,12 +1,12 @@
-import { FlatList, RefreshControl, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
+import { ColorValue, FlatList, RefreshControl, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 
 import { useEffect, useReducer, useState } from 'react';
 import ActivitiesButtons, { ActivityButtonType } from '../../components/Activities';
 import { Text, View } from '../../components/Themed';
 import { Action, ActionType, Activities, ActivityEnum } from '../../types/activity.type';
 import axios from 'axios';
-
-const initialState: ActivityButtonType[] = [{ name: ActivityEnum.WAKE_UP, color: 'red' }, { name: ActivityEnum.BIBERON, color: 'blue' }];
+import ActivityItem from '../../components/ActivityItem';
+import { initialState } from './initial';
 
 function reducer(prevState: Activities, action: ActionType): Activities {
   switch (action.type) {
@@ -45,23 +45,22 @@ export default function TabOneScreen() {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView>
       <ScrollView contentContainerStyle={styles.container} refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         <Text style={styles.title}>Activities</Text>
         <Text style={styles.title}>{example ? example : '...loading'}</Text>
         <View style={styles.separator} lightColor="gray" darkColor="rgba(255,255,255,0.1)" />
         <ActivitiesButtons activities={initialState} dispatch={dispatch} />
-        {state.map((activity) => <Text key={activity.id}>{activity.name}</Text>)}
+        {state.map((activity) => <ActivityItem key={activity.id} activity={activity} />)}
       </ScrollView>
-
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     alignItems: 'center',
     // justifyContent: 'center',
   },
