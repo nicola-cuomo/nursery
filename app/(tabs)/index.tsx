@@ -1,55 +1,62 @@
-import { ColorValue, FlatList, RefreshControl, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
+import { RefreshControl, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 
-import { useEffect, useReducer, useState } from 'react';
-import ActivitiesButtons, { ActivityButtonType } from '../../components/Activities';
-import { Text, View } from '../../components/Themed';
-import { Action, ActionType, Activities, ActivityEnum } from '../../types/activity.type';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
+import { useReducer, useState } from 'react';
+import ActivitiesButtons from '../../components/Activities';
 import ActivityItem from '../../components/ActivityItem';
+import { Text, View } from '../../components/Themed';
+import { Action, ActionType, Activities, Activity } from '../../types/activity.type';
 import { initialState } from './initial';
 
-function reducer(prevState: Activities, action: ActionType): Activities {
-  switch (action.type) {
-    case Action.ADD_ACTIVITY:
-      return [...prevState, action.payload];
-
-    default:
-      return prevState;
-  }
-}
 
 export default function TabOneScreen() {
-  const [state, dispatch] = useReducer(reducer, []);
-  const [example, setExample] = useState('');
-  const [refreshing, setRefreshing] = useState(false);
-
-  function fetchActivities() {
-    const result = axios.get('https://nursery.up.railway.app/');
-
-    result.then((res) => {
-      setExample(res.data);
-      setRefreshing(false);
+  const mutation = useMutation((data: string) => axios.post('https://nursery-api.up.railway.app/activity', { text: data }), {
+    onSuccess: (data) => {
+      queryClint.invalidateQueries(['activities']);
+    },
+    onError: (error) => {
+      console.log(error);
     }
-    ).catch((err) => {
-      console.log(err);
-    });
+  });
+  const [state, dispatch] = useReducer(reducer, []);
+  const [refreshing, setRefreshing] = useState(false);
+  const queryClint = useQueryClient();
+
+  function reducer(prevState: Activities, action: ActionType): Activities {
+    switch (action.type) {
+      case Action.ADD_ACTIVITY:
+        action.payload.newActivity && mutation.mutate(action.payload.newActivity.text);
+        return prevState;
+      case Action.INITIALIZE:
+        return action.payload.activities ?? [];
+      default:
+        return prevState;
+    }
   }
+
+  useQuery(['activities'], () => axios.get<Activity[]>('https://nursery-api.up.railway.app/activity'), {
+    onSuccess: (data) => {
+      dispatch({ type: Action.INITIALIZE, payload: { activities: data.data } });
+      setRefreshing(false);
+    },
+    onError: (error) => {
+      console.log(error);
+    }
+  });
+
 
   const onRefresh = () => {
     setRefreshing(true);
-    fetchActivities();
+    queryClint.invalidateQueries(['activities']);
   }
-
-  useEffect(() => {
-    fetchActivities();
-  }, []);
 
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.container} refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         <Text style={styles.title}>Activities</Text>
-        <Text style={styles.title}>{example ? example : '...loading'}</Text>
+        <Text style={styles.title}>{mutation.isLoading && '...loading'}</Text>
         <View style={styles.separator} lightColor="gray" darkColor="rgba(255,255,255,0.1)" />
         <ActivitiesButtons activities={initialState} dispatch={dispatch} />
         {state.map((activity) => <ActivityItem key={activity.id} activity={activity} />)}

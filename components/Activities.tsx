@@ -1,6 +1,5 @@
-import React, { Dispatch, DispatchWithoutAction } from 'react'
-import { Button, ColorValue, StyleSheet, View } from 'react-native'
-import { v4 as uuidv4 } from 'uuid';
+import React, { Dispatch } from 'react';
+import { Button, ColorValue, StyleSheet, View } from 'react-native';
 import { Action, ActionType, ActivityEnum } from '../types/activity.type';
 
 export type ActivityButtonType = {
@@ -18,7 +17,7 @@ const ActivitiesButtons = ({ activities, dispatch }: Props) => {
                     <Button
                         key={activity.name}
                         onPress={() => {
-                            dispatch({ type: Action.ADD_ACTIVITY, payload: { name: activity.name, id: uuidv4() } })
+                            dispatch({ type: Action.ADD_ACTIVITY, payload: { newActivity: { text: activity.name } } })
                         }}
                         title={activity.name}
                         color={activity.color}

@@ -1,8 +1,8 @@
-import { Button, DatePickerIOS, DatePickerIOSComponent, Modal, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
-import React, { useState } from 'react'
-import { Activity } from '../types/activity.type'
-import { getColor } from '../app/(tabs)/initial'
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import React, { useState } from 'react';
+import { Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { getColor } from '../app/(tabs)/initial';
+import { Activity } from '../types/activity.type';
 
 type Props = {
     activity: Activity

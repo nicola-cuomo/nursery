@@ -1,15 +1,18 @@
 export enum Action {
   ADD_ACTIVITY = "ADD_ACTIVITY",
+  INITIALIZE = "INITIALIZE",
 }
 
 export type Activity = {
   id: string;
-  name: ActivityEnum;
+  createdAt: Date;
+  updatedAt: Date;
+  text: string;
 };
 
 export type ActionType = {
   type: Action;
-  payload: Activity;
+  payload: { newActivity?: { text: string }; activities?: Activity[] };
 };
 
 export enum ActivityEnum {
