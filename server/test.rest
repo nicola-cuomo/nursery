@@ -1,0 +1,11 @@
+GET https://nursery-api.up.railway.app/todos
+
+###
+
+POST https://nursery-api.up.railway.app/todos
+Content-Type: application/json
+
+{
+  "text": "Buy bread",
+  "completed": false
+}
