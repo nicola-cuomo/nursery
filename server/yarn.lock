@@ -44,6 +44,11 @@
   resolved "https://registry.yarnpkg.com/@prisma/engines/-/engines-4.13.0.tgz#582a6b90b6efeb0f465984f1fe0e72a4afaaa5ae"
   integrity sha512-HrniowHRZXHuGT9XRgoXEaP2gJLXM5RMoItaY2PkjvuZ+iHc0Zjbm/302MB8YsPdWozAPHHn+jpFEcEn71OgPw==
 
+"@trpc/server@^10.21.1":
+  version "10.21.1"
+  resolved "https://registry.yarnpkg.com/@trpc/server/-/server-10.21.1.tgz#42a321d8199b4ad800b9e786b4249a9b6df45d6c"
+  integrity sha512-4E4upTD2/Aq0Dm9HW4nbKSoIlqbV/ajRqNl1MCFBd9FjTv47qq2ncmAWMbb0AIVh2UV87PJlTjpPNNecRm6g9Q==
+
 "@tsconfig/node10@^1.0.7":
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/@tsconfig/node10/-/node10-1.0.9.tgz#df4907fc07a886922637b15e02d4cebc4c0021b2"
@@ -811,3 +816,8 @@ yn@3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/yn/-/yn-3.1.1.tgz#1e87401a09d767c1d5eab26a6e4c185182d2eb50"
   integrity sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==
+
+zod@^3.21.4:
+  version "3.21.4"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.21.4.tgz#10882231d992519f0a10b5dd58a38c9dabbb64db"
+  integrity sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==
