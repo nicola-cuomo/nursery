@@ -12,7 +12,7 @@ import trpc from '../utils/trpc';
 
 
 export default function TabOneScreen() {
-  const [refreshing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState(true);
   const queryClint = useQueryClient();
   const mutation = useMutation((data: string) => trpc.addActivity.mutate(data))
 
