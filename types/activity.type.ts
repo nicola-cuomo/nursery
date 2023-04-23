@@ -5,8 +5,8 @@ export enum Action {
 
 export type Activity = {
   id: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | string;
+  updatedAt: Date | string;
   text: string;
 };
 

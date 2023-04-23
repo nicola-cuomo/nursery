@@ -8,25 +8,22 @@ import ActivityItem from '../../components/ActivityItem';
 import { Text, View } from '../../components/Themed';
 import { Action, ActionType, Activities, Activity } from '../../types/activity.type';
 import { initialState } from './initial';
+import trpc from '../utils/trpc';
 
 
 export default function TabOneScreen() {
-  const mutation = useMutation((data: string) => axios.post('https://nursery-api.up.railway.app/activity', { text: data }), {
-    onSuccess: (data) => {
-      queryClint.invalidateQueries(['activities']);
-    },
-    onError: (error) => {
-      console.log(error);
-    }
-  });
-  const [state, dispatch] = useReducer(reducer, []);
   const [refreshing, setRefreshing] = useState(false);
   const queryClint = useQueryClient();
+  const mutation = useMutation((data: string) => trpc.addActivity.mutate(data))
 
-  function reducer(prevState: Activities, action: ActionType): Activities {
+  const reducer = (prevState: Activities, action: ActionType): Activities => {
     switch (action.type) {
       case Action.ADD_ACTIVITY:
-        action.payload.newActivity && mutation.mutate(action.payload.newActivity.text);
+        action.payload.newActivity && mutation.mutate(action.payload.newActivity.text, {
+          onSuccess: (data) => {
+            queryClint.invalidateQueries(['activities']);
+          }
+        });
         return prevState;
       case Action.INITIALIZE:
         return action.payload.activities ?? [];
@@ -34,10 +31,11 @@ export default function TabOneScreen() {
         return prevState;
     }
   }
+  const [state, dispatch] = useReducer(reducer, []);
 
-  useQuery(['activities'], () => axios.get<Activity[]>('https://nursery-api.up.railway.app/activity'), {
+  useQuery(['activities'], () => trpc.getActivities.query(), {
     onSuccess: (data) => {
-      dispatch({ type: Action.INITIALIZE, payload: { activities: data.data } });
+      dispatch({ type: Action.INITIALIZE, payload: { activities: data } });
       setRefreshing(false);
     },
     onError: (error) => {
