@@ -6,6 +6,8 @@ export const prisma = new PrismaClient();
 
 const port = process.env.PORT || 3000;
 
+console.log("port", port);
+
 createHTTPServer({
   router: appRouter,
 }).listen(Number(port));
